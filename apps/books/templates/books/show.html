@@ -1,0 +1,80 @@
+{% load staticfiles %}
+<html>
+  <head>
+    <title>Users</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    <div class='container'>
+      {% if messages %}
+        {{messages.length}}
+        <ul class="alert-danger">
+          {% for message in messages %}
+            <li>{{ message}}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    
+    <div class='container'>
+      <div class='nav navbar'>
+        <a href = '/books/new'>Add a book and a review</a> |
+        <a href="/users/logout">logout</a>
+        <h3>Welcome, {{current_user.name}}</h3>
+      </div>
+      <div class='left'>
+        <h2>Recent Book Reviews:</h2>
+
+        {%if book3%}
+          {%for book in book3%}
+            <h4><a href='/books/{{book.id}}'>{{book.title}}</a></h4>
+            {%if reviews%}
+              {%for review in reviews%}
+                {%if review.book_id == book.id%}
+                  {%if review.rating == 1%}
+                    <img src="{% static "/img/star-1.jpeg" %}" alt="1"/>
+                  {%elif review.rating == 2%}
+                    <img src="{% static "/img/star-2.jpg" %}" alt="2"/>
+                  {%elif review.rating == 3%}
+                    <img src="{% static "/img/star-3.jpeg" %}" alt="3"/>
+                  {%elif review.rating == 4%}
+                    <img src="{% static "/img/star-4.jpg" %}" alt="4"/>
+                  {%elif review.rating == 5%}
+                    <img src="{% static "/img/star-5.jpeg" %}" alt="5"/>
+                  {%elif review.rating == 0%}
+                    <img src="{% static "/img/star-0.jpg" %}" alt="0"/>
+                  {%endif%}
+                  {%for user in users%}
+                    {%if user.id == review.user_id%}
+                      <a href='/users/{{review.user_id}}'>{{user.name}}</a>
+                      <span>{{review.body}}</span><br/>
+                      <p>{{review.created_at}}</p>
+                    {%endif%}
+                  {%endfor%}
+                {%endif%}
+              {%endfor%}
+            {%endif%}    
+
+            
+          {%endfor%}
+        {%endif%}
+      </div>  
+      <div class="overflow_books">
+          <h5>Other books with Reviews: </h5><br/>
+        <div class='overflow_div'>
+        
+          {%if books_list%}
+            {%for book in books_list%}
+              <a class='overflow_title' href='/books/{{book.id}}'>{{book.title}}</a><br/>
+            {%endfor%}
+          {%endif%}
+        </div>  
+    </div>
+    
+    </div>
+    <br/>
+    <br/>
+  </body>
+</html>

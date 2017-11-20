@@ -1,0 +1,76 @@
+{% load staticfiles %}
+<html>
+  <head>
+    <title>Users</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    <div class='container'>
+      {% if messages %}
+        {{messages.length}}
+        <ul class="alert-danger">
+          {% for message in messages %}
+            <li>{{ message}}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    
+    <div class='container'>
+      <div class='nav navbar'>
+        <a href = '/books'>home</a> |
+        <a href="/users/logout">logout</a>
+      </div>
+      <div style="float: left"class='book'>
+          <h2>{{book.title}}</h2>
+          <h4>Author: {{author}}</h4><br/><br/>
+          <h2>Reviews:</h2><hr/>
+          {%for review in reviews%}
+            {%if review.rating == 1%}
+              <img src="{% static "/img/star-1.jpeg" %}" alt="1"/>
+            {%elif review.rating == 2%}
+              <img src="{% static "/img/star-2.jpg" %}" alt="2"/>
+            {%elif review.rating == 3%}
+              <img src="{% static "/img/star-3.jpeg" %}" alt="3"/>
+            {%elif review.rating == 4%}
+              <img src="{% static "/img/star-4.jpg" %}" alt="4"/>
+            {%elif review.rating == 5%}
+              <img src="{% static "/img/star-5.jpeg" %}" alt="5"/>
+            {%elif review.rating == 0%}
+              <img src="{% static "/img/star-0.jpg" %}" alt="0"/>
+            {%endif%}
+            <p>Rating: {{review.rating}}</p>
+            {% for user in users %}
+              {%if user.id == review.user_id%}
+                <a href='/users/{{user.id}}'>{{user.name}}</a> 
+                says {{review.body}}
+                <p>{{review.created_at}}</p>
+                {%if user.id == request.session.id %}
+                  <a class='right' href='review/delete/{{review.id}}'>delete this review</a><br/>
+                {%endif%}
+                <hr/>
+              {%endif%}
+            {%endfor%}
+          {%endfor%}
+      </div>
+      <div class='right'>
+        <h2>Add a Review</h2>
+        <form action='/books/review/add/{{book.id}}' method = 'post'>
+          {%csrf_token%} 
+          <textarea name='body' class='form-control'></textarea><br/>
+            <select name="rating">
+              <option selected="selected" disabled>Rating:</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select> Stars <br/><br/>
+            <input type='Submit' value='Submit Review'>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+{% load staticfiles %}
+<html>
+  <head>
+    <title>Users</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    <div class='container'>
+      {% if messages %}
+        {{messages.length}}
+        <ul class="alert-danger">
+          {% for message in messages %}
+            <li>{{ message}}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class='container'>
+      <div class='nav navbar'>
+        <a href = '/books'>Home</a> |
+        <a href="/users/logout">logout</a>
+        <h3>Welcome, {{current_user.name}}</h3>
+      </div>
+      <h3>Add a New Book Title and a Review</h3>
+      <form action='/books/add' method='post'>
+        {%csrf_token%}
+        <div class="form-group">
+            Book Title: 
+            <input class="form-control" type='text' name='title' required>
+        </div>
+        <div class="form-group">
+            Author:
+            <div class='form-group author'>
+              {%if authors%}
+                <select name="author_list">
+                  <option selected="selected" disabled>Choose from the list:</option>
+                {%for author in authors %}
+                  <option value= "{{author.id}}">{{author.name}}</option>
+                {%endfor%}
+              </select><br/><br/>
+                 
+            {%endif%} 
+               Or add a new author:
+               <input type='text' name='author_name' class='from-control'><br/>
+            </div>
+            <div class='form group review'>
+              Review:
+              <textarea name='body' class='form-control'></textarea><br/>
+              <select name="rating">
+                <option selected="selected" disabled>Rating:</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+              </select> Stars <br/><br/>
+            </div>
+            <div class='form-group'>
+              <input class = 'btn btn-primary button' type=submit value='Add book and Review'>
+            </div>
+
+            </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
